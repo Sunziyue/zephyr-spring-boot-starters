@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+xyz.sunziyue.elastic.job.autoconfigure.JobAutoConfiguration

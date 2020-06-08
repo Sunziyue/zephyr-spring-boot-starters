@@ -26,6 +26,8 @@
         <mybatis.version>3.5.4</mybatis.version>
         <mybatis-spring.version>2.0.4</mybatis-spring.version>
         <druid.version>1.1.10</druid.version>
+        <elastic.version>2.1.5</elastic.version>
+        <jackson.version>2.11.0</jackson.version>
         <!--        <spring.version>5.2.6.RELEASE</spring.version>-->
         <!--        <springfox.version>2.9.0</springfox.version>-->
         <!--        <swagger.annotation.version>1.6.1</swagger.annotation.version>-->
@@ -69,7 +71,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
+            <!-- zephyr-spring-boot-mybatis-starter START -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-jdbc</artifactId>
@@ -99,6 +101,41 @@
                 <artifactId>mybatis-spring</artifactId>
                 <version>${mybatis-spring.version}</version>
             </dependency>
+            <!-- zephyr-spring-boot-mybatis-starter END -->
+
+            <!-- zephy-springr-boot-elastic-job-starter START -->
+            <dependency>
+                <groupId>com.dangdang</groupId>
+                <artifactId>elastic-job-lite-core</artifactId>
+                <version>${elastic.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.dangdang</groupId>
+                <artifactId>elastic-job-lite-spring</artifactId>
+                <version>${elastic.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-guava</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <!-- zephy-springr-boot-elastic-job-starter END -->
+
         </dependencies>
     </dependencyManagement>
 
