@@ -8,113 +8,55 @@
     <artifactId>zephyr-spring-boot-starters</artifactId>
     <packaging>pom</packaging>
     <version>2.3.0.RELEASE</version>
+    <modules>
+        <module>zephyr-spring-boot-elastic-job-starter</module>
+        <module>zephyr-spring-boot-mybatis-starter</module>
+        <module>zephyr-spring-boot-redis-starter</module>
+        <module>zephyr-spring-boot-rocket-mq-starter</module>
+        <module>zephyr-spring-boot-swagger-starter</module>
+        <module>zephyr-spring-boot-common</module>
+    </modules>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>1.8</java.version>
-
-        <dubbo.version>2.6.8</dubbo.version>
         <lombok.version>1.18.12</lombok.version>
-        <spring.version>5.2.6.RELEASE</spring.version>
         <spring-boot.version>2.3.0.RELEASE</spring-boot.version>
-        <commons-dbcp.version>1.4</commons-dbcp.version>
-        <zookeeper.version>3.6.1</zookeeper.version>
-        <terminus-common.version>2.0.3.RELEASE</terminus-common.version>
-        <terminus-session.version>1.7.0.RELEASE</terminus-session.version>
-        <terminus-zookeeper.version>2.2.RELEASE</terminus-zookeeper.version>
         <guava.version>29.0-jre</guava.version>
-        <assertj.version>3.16.1</assertj.version>
         <mybatis.version>3.5.4</mybatis.version>
         <mybatis-spring.version>2.0.4</mybatis-spring.version>
-        <spring.platform.version>2.0.0.RELEASE</spring.platform.version>
-        <springfox.version>2.9.0</springfox.version>
-        <swagger.annotation.version>1.6.1</swagger.annotation.version>
+        <druid.version>1.1.10</druid.version>
+        <!--        <spring.version>5.2.6.RELEASE</spring.version>-->
+        <!--        <springfox.version>2.9.0</springfox.version>-->
+        <!--        <swagger.annotation.version>1.6.1</swagger.annotation.version>-->
+        <!--        <dubbo.version>2.6.8</dubbo.version>-->
+        <!--        <commons-dbcp.version>1.4</commons-dbcp.version>-->
+        <!--        <zookeeper.version>3.6.1</zookeeper.version>-->
+        <!--        <terminus-common.version>2.0.3.RELEASE</terminus-common.version>-->
+        <!--        <terminus-session.version>1.7.0.RELEASE</terminus-session.version>-->
+        <!--        <terminus-zookeeper.version>2.2.RELEASE</terminus-zookeeper.version>-->
+        <!--        <assertj.version>3.16.1</assertj.version>-->
+        <!--        <spring.platform.version>2.0.0.RELEASE</spring.platform.version>-->
     </properties>
 
-
     <dependencies>
-
-        <!-- lombok -->
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>dubbo</artifactId>
-        </dependency>
-
-
-        <!-- mybatis -->
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mybatis</groupId>
-            <artifactId>mybatis-spring</artifactId>
-        </dependency>
-
-        <!--  datasource pool -->
-        <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-        </dependency>
-
-        <!-- terminus common -->
-        <dependency>
-            <groupId>io.terminus</groupId>
-            <artifactId>terminus-common</artifactId>
-        </dependency>
-
-
-        <dependency>
-            <groupId>io.terminus.session</groupId>
-            <artifactId>terminus-session</artifactId>
-        </dependency>
-
-        <!-- terminus zk -->
-        <dependency>
-            <groupId>io.terminus.zookeeper</groupId>
-            <artifactId>common</artifactId>
-        </dependency>
-
-        <!-- zookeeper -->
-        <dependency>
-            <groupId>org.apache.zookeeper</groupId>
-            <artifactId>zookeeper</artifactId>
-        </dependency>
-
-        <!-- guava -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
+            <version>${guava.version}</version>
         </dependency>
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
         </dependency>
-
-<!--        <dependency>-->
-<!--            <groupId>org.springframework</groupId>-->
-<!--            <artifactId>spring-web</artifactId>-->
-<!--        </dependency>-->
-
         <dependency>
-            <groupId>io.swagger</groupId>
-            <artifactId>swagger-annotations</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
     </dependencies>
 
@@ -128,129 +70,34 @@
                 <scope>import</scope>
             </dependency>
 
-            <!-- lombok -->
             <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-jdbc</artifactId>
+                <version>${spring-boot.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.tomcat</groupId>
+                        <artifactId>tomcat-jdbc</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
-
 
             <dependency>
                 <groupId>com.alibaba</groupId>
-                <artifactId>dubbo</artifactId>
-                <version>${dubbo.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>spring</artifactId>
-                    </exclusion>
-                </exclusions>
-                <scope>provided</scope>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
             </dependency>
 
-
-            <!-- mybatis -->
             <dependency>
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis</artifactId>
                 <version>${mybatis.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.mybatis</groupId>
                 <artifactId>mybatis-spring</artifactId>
                 <version>${mybatis-spring.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>spring-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>spring-jdbc</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>spring-context</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <!--  datasource pool -->
-            <dependency>
-                <groupId>commons-dbcp</groupId>
-                <artifactId>commons-dbcp</artifactId>
-                <version>${commons-dbcp.version}</version>
-            </dependency>
-
-            <!-- terminus common -->
-            <dependency>
-                <groupId>io.terminus</groupId>
-                <artifactId>terminus-common</artifactId>
-                <version>${terminus-common.version}</version>
-            </dependency>
-
-
-            <dependency>
-                <groupId>io.terminus.session</groupId>
-                <artifactId>terminus-session</artifactId>
-                <version>${terminus-session.version}</version>
-            </dependency>
-
-            <!-- terminus zk -->
-            <dependency>
-                <groupId>io.terminus.zookeeper</groupId>
-                <artifactId>common</artifactId>
-                <version>${terminus-zookeeper.version}</version>
-            </dependency>
-
-            <!-- zookeeper -->
-            <dependency>
-                <groupId>org.apache.zookeeper</groupId>
-                <artifactId>zookeeper</artifactId>
-                <version>${zookeeper.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.slf4j</groupId>
-                        <artifactId>slf4j-log4j12</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <!-- guava -->
-            <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.assertj</groupId>
-                <artifactId>assertj-core</artifactId>
-                <version>${assertj.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger2</artifactId>
-                <version>${springfox.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger-ui</artifactId>
-                <version>${springfox.version}</version>
-            </dependency>
-
-<!--            <dependency>-->
-<!--                <groupId>org.springframework</groupId>-->
-<!--                <artifactId>spring-web</artifactId>-->
-<!--                <version>${spring.version}</version>-->
-<!--            </dependency>-->
-
-            <dependency>
-                <groupId>io.swagger</groupId>
-                <artifactId>swagger-annotations</artifactId>
-                <version>${swagger.annotation.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -290,5 +137,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
