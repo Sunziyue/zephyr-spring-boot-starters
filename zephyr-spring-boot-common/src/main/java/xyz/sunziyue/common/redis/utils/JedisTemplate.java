@@ -4,7 +4,7 @@ import org.slf4j.LoggerFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 import redis.clients.jedis.exceptions.JedisException;
-import redis.clients.util.Pool;
+import redis.clients.jedis.util.Pool;
 
 public class JedisTemplate {
     private static Logger logger = LoggerFactory.getLogger(JedisTemplate.class);
@@ -63,9 +63,9 @@ public class JedisTemplate {
     protected void closeResource(Jedis jedis, boolean connectionBroken) {
         if (jedis != null) {
             if (connectionBroken) {
-                this.jedisPool.returnBrokenResource(jedis);
+                this.jedisPool.close();
             } else {
-                this.jedisPool.returnResource(jedis);
+                this.jedisPool.close();
             }
         }
 

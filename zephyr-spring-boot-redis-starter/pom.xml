@@ -12,4 +12,15 @@
     <artifactId>zephyr-spring-boot-redis-starter</artifactId>
     <packaging>jar</packaging>
 
+    <dependencies>
+        <dependency>
+            <groupId>xyz.sunziyue</groupId>
+            <artifactId>zephyr-spring-boot-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>

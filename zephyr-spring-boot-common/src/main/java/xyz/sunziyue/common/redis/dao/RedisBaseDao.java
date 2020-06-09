@@ -3,6 +3,7 @@ package xyz.sunziyue.common.redis.dao;
 import com.google.common.base.Function;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Pipeline;
 import redis.clients.jedis.Response;
@@ -22,6 +23,7 @@ public abstract class RedisBaseDao<T> {
     protected final JedisTemplate template;
     protected final Class<T> entityClass;
 
+    @Autowired
     public RedisBaseDao(JedisTemplate template) {
         this.template = template;
         this.entityClass = (Class) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];
