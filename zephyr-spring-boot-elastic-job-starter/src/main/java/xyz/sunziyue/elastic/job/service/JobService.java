@@ -133,8 +133,8 @@ public class JobService {
 
         try {
             childrenCache.start(PathChildrenCache.StartMode.POST_INITIALIZED_EVENT);
-        } catch (Exception var5) {
-            var5.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

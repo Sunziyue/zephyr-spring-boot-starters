@@ -1,6 +1,8 @@
 package xyz.sunziyue.boot.mybatis.autoconfigure;
 
+import com.google.common.base.Throwables;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.ExecutorType;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.core.io.Resource;
@@ -12,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Data
+@Slf4j
 @ConfigurationProperties(prefix = "mybatis")
 public class MybatisProperties {
     public static final String MYBATIS_PREFIX = "mybatis";
@@ -32,18 +35,16 @@ public class MybatisProperties {
     public Resource[] resolveMapperLocations() {
         List<Resource> resources = new ArrayList();
         if (this.mapperLocations != null) {
-            String[] var2 = this.mapperLocations;
-            int var3 = var2.length;
-
-            for (int var4 = 0; var4 < var3; ++var4) {
-                String mapperLocation = var2[var4];
-
+            for (int i = 0; i < this.mapperLocations.length; ++i) {
                 try {
-                    Resource[] mappers = (new PathMatchingResourcePatternResolver()).getResources(mapperLocation);
+                    Resource[] mappers = (new PathMatchingResourcePatternResolver()).getResources(this.mapperLocations[i]);
                     resources.addAll(Arrays.asList(mappers));
-                } catch (IOException var8) {
+                } catch (IOException e) {
+                    log.error("Mybatis.mapperLocations.{} is Configuration failed;\nERROR:{}", this.mapperLocations[i], Throwables.getStackTraceAsString(e));
                 }
             }
+        } else {
+            log.warn("Mybatis mapperLocations is not config, please go to file application.yml found mybatis.mapperLocations");
         }
 
         Resource[] mapperLocations = new Resource[resources.size()];

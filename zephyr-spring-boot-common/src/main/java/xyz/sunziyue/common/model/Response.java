@@ -129,8 +129,8 @@ public class Response<T> implements Serializable {
         try {
             T result = supplier.get();
             return ok(result);
-        } catch (Exception var3) {
-            logger.error("error when get response call", var3);
+        } catch (Exception e) {
+            logger.error("error when get response call", e);
             return fail(errorCode);
         }
     }

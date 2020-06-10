@@ -14,10 +14,10 @@ public class ModelHelper {
 
     public static List<Long> extradIds(List<? extends Indexable> indexables) {
         List<Long> ids = Lists.newArrayList();
-        Iterator var2 = indexables.iterator();
+        Iterator iterator = indexables.iterator();
 
-        while(var2.hasNext()) {
-            Indexable indexable = (Indexable)var2.next();
+        while(iterator.hasNext()) {
+            Indexable indexable = (Indexable)iterator.next();
             ids.add(indexable.getId());
         }
 
@@ -33,19 +33,19 @@ public class ModelHelper {
                 Field field = objectType.getDeclaredField(filedName);
                 boolean accessible = field.isAccessible();
                 field.setAccessible(true);
-                Iterator var6 = models.iterator();
+                Iterator iterator = models.iterator();
 
-                while(var6.hasNext()) {
-                    Object model = var6.next();
+                while(iterator.hasNext()) {
+                    Object model = iterator.next();
                     T value = (T) field.get(model);
                     result.add(value);
                 }
 
                 field.setAccessible(accessible);
-            } catch (NoSuchFieldException var9) {
-                var9.printStackTrace();
-            } catch (IllegalAccessException var10) {
-                var10.printStackTrace();
+            } catch (NoSuchFieldException noSuchFieldException) {
+                noSuchFieldException.printStackTrace();
+            } catch (IllegalAccessException illegalAccessException) {
+                illegalAccessException.printStackTrace();
             }
 
             return result;

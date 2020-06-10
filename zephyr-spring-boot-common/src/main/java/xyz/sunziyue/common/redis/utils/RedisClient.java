@@ -67,8 +67,8 @@ public abstract class RedisClient {
                 Long deleted = 0L;
 
                 String key;
-                for(Iterator var4 = keys.iterator(); var4.hasNext(); deleted = deleted + (Long)p.lrem(key, count, String.valueOf(val)).get()) {
-                    key = (String)var4.next();
+                for(Iterator i = keys.iterator(); i.hasNext(); deleted = deleted + (Long)p.lrem(key, count, String.valueOf(val)).get()) {
+                    key = (String)i.next();
                 }
 
                 p.sync();
@@ -82,14 +82,14 @@ public abstract class RedisClient {
             public Long action(Jedis jedis) {
                 Pipeline p = jedis.pipelined();
                 Long removed = 0L;
-                Iterator var4 = keys.iterator();
+                Iterator iterator = keys.iterator();
 
-                while(var4.hasNext()) {
-                    String key = (String)var4.next();
+                while(iterator.hasNext()) {
+                    String key = (String)iterator.next();
                     List<?> vals = (List)keyVals.get(key);
 
-                    for(Iterator var7 = vals.iterator(); var7.hasNext(); removed = removed + 1L) {
-                        Object val = var7.next();
+                    for(Iterator i = vals.iterator(); i.hasNext(); removed = removed + 1L) {
+                        Object val = i.next();
                         p.lrem(key, 1L, String.valueOf(val));
                     }
                 }
@@ -106,8 +106,8 @@ public abstract class RedisClient {
                 Pipeline p = jedis.pipelined();
                 Long removed = 0L;
 
-                for(Iterator var4 = vals.iterator(); var4.hasNext(); removed = removed + 1L) {
-                    Object val = var4.next();
+                for(Iterator i = vals.iterator(); i.hasNext(); removed = removed + 1L) {
+                    Object val = i.next();
                     p.lrem(key, 1L, String.valueOf(val));
                 }
 
@@ -142,10 +142,10 @@ public abstract class RedisClient {
                     return new Paging(0L, Collections.emptyList());
                 } else {
                     List<Long> ids = Lists.newArrayListWithCapacity(total.intValue());
-                    Iterator var7 = ((Set)i.get()).iterator();
+                    Iterator iterator = ((Set)i.get()).iterator();
 
-                    while(var7.hasNext()) {
-                        String s = (String)var7.next();
+                    while(iterator.hasNext()) {
+                        String s = (String)iterator.next();
                         ids.add(Long.parseLong(s));
                     }
 
@@ -161,8 +161,8 @@ public abstract class RedisClient {
                 Pipeline p = jedis.pipelined();
                 Long pushed = 0L;
 
-                for(Iterator var4 = keys.iterator(); var4.hasNext(); pushed = pushed + 1L) {
-                    String key = (String)var4.next();
+                for(Iterator i = keys.iterator(); i.hasNext(); pushed = pushed + 1L) {
+                    String key = (String)i.next();
                     p.lpush(key, new String[]{val});
                 }
 
@@ -195,10 +195,10 @@ public abstract class RedisClient {
             public List<Long> action(Jedis jedis) {
                 Pipeline p = jedis.pipelined();
                 List<Response<Long>> resp = Lists.newArrayListWithCapacity(keys.size());
-                Iterator var4 = keys.iterator();
+                Iterator iterator = keys.iterator();
 
-                while(var4.hasNext()) {
-                    String key = (String)var4.next();
+                while(iterator.hasNext()) {
+                    String key = (String)iterator.next();
                     resp.add(p.scard(key));
                 }
 

@@ -46,10 +46,10 @@ public abstract class RedisBaseDao<T> {
                 public List<Response<Map<String, String>>> action(Jedis jedis) {
                     List<Response<Map<String, String>>> result = Lists.newArrayListWithCapacity(Iterables.size(keys));
                     Pipeline p = jedis.pipelined();
-                    Iterator var4 = keys.iterator();
+                    Iterator iterator = keys.iterator();
 
-                    while (var4.hasNext()) {
-                        String key = (String) var4.next();
+                    while (iterator.hasNext()) {
+                        String key = (String) iterator.next();
                         result.add(p.hgetAll((String) keyGen.apply(key)));
                     }
 
@@ -58,10 +58,10 @@ public abstract class RedisBaseDao<T> {
                 }
             });
             List<T> entities = Lists.newArrayListWithCapacity(result.size());
-            Iterator var5 = result.iterator();
+            Iterator iterator = result.iterator();
 
-            while (var5.hasNext()) {
-                Response<Map<String, String>> mapResponse = (Response) var5.next();
+            while (iterator.hasNext()) {
+                Response<Map<String, String>> mapResponse = (Response) iterator.next();
                 entities.add((T) this.stringHashMapper.fromHash((Map) mapResponse.get()));
             }
 

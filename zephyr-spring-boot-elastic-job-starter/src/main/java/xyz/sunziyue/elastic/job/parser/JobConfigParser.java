@@ -49,10 +49,10 @@ public class JobConfigParser implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext ctx) throws BeansException {
         this.environment = ctx.getEnvironment();
         Map<String, Object> beanMap = ctx.getBeansWithAnnotation(ElasticJobConfig.class);
-        Iterator var3 = beanMap.values().iterator();
+        Iterator iterator = beanMap.values().iterator();
 
-        while (var3.hasNext()) {
-            Object confBean = var3.next();
+        while (iterator.hasNext()) {
+            Object confBean = iterator.next();
             Class<?> clz = confBean.getClass();
             this.getJobTypeClass(clz);
             String jobTypeName = this.jobTypeClass.getSimpleName();
@@ -139,11 +139,8 @@ public class JobConfigParser implements ApplicationContextAware {
             Class<?>[] classes = clz.getInterfaces();
             boolean isJob = false;
             if (Objects.nonNull(classes) && classes.length > 0) {
-                Class[] var4 = classes;
-                int var5 = classes.length;
-
-                for (int var6 = 0; var6 < var5; ++var6) {
-                    Class<?> c = var4[var6];
+                for (int i = 0; i < classes.length; ++i) {
+                    Class<?> c = classes[i];
                     String name = c.getSimpleName();
                     if (Objects.equals(name, "SimpleJob") || Objects.equals(name, "DataflowJob") || Objects.equals(name, "ScriptJob")) {
                         isJob = true;

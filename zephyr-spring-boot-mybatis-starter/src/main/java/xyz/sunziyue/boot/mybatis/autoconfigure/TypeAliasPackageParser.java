@@ -22,13 +22,11 @@ public class TypeAliasPackageParser {
 
     static Set<String> resolveTypeAliasPackageNames(String inputs) {
         Set<String> result = new HashSet();
-        Iterator var2 = comma.split(inputs).iterator();
-
-        while(var2.hasNext()) {
-            String input = (String)var2.next();
+        Iterator iterator = comma.split(inputs).iterator();
+        while(iterator.hasNext()) {
+            String input = (String)iterator.next();
             result.addAll(resolvePackageNames(input));
         }
-
         return result;
     }
 
@@ -56,39 +54,39 @@ public class TypeAliasPackageParser {
         current.put(currentIndex, "");
 
         int end;
-        for(Iterator var5 = matchPositions.iterator(); var5.hasNext(); currentIndex = end) {
-            MatchPosition matchPosition = (MatchPosition)var5.next();
+        for(Iterator iterator = matchPositions.iterator(); iterator.hasNext(); currentIndex = end) {
+            MatchPosition matchPosition = (MatchPosition)iterator.next();
             int start = matchPosition.start();
             end = matchPosition.end();
             String betweenCurrentAndStart = input.substring(currentIndex, start);
             String text = matchPosition.text();
-            Iterator var11 = or.split(text).iterator();
+            Iterator iterator1 = or.split(text).iterator();
 
-            while(var11.hasNext()) {
-                String part = (String)var11.next();
-                Iterator var13 = current.get(currentIndex).iterator();
+            while(iterator1.hasNext()) {
+                String part = (String)iterator1.next();
+                Iterator iterator2 = current.get(currentIndex).iterator();
 
-                while(var13.hasNext()) {
-                    String c = (String)var13.next();
+                while(iterator2.hasNext()) {
+                    String c = (String)iterator2.next();
                     current.put(end, c + betweenCurrentAndStart + part);
                 }
             }
         }
 
         int length = input.length();
-        Iterator var16 = current.get(currentIndex).iterator();
+        Iterator iterator = current.get(currentIndex).iterator();
 
         String packageName;
-        while(var16.hasNext()) {
-            packageName = (String)var16.next();
+        while(iterator.hasNext()) {
+            packageName = (String)iterator.next();
             String betweenLastMatchEndAndInputEnd = input.substring(currentIndex, length);
             current.put(length, packageName + betweenLastMatchEndAndInputEnd);
         }
 
-        var16 = current.get(length).iterator();
+        iterator = current.get(length).iterator();
 
-        while(var16.hasNext()) {
-            packageName = (String)var16.next();
+        while(iterator.hasNext()) {
+            packageName = (String)iterator.next();
             packageNames.add(packageName);
         }
 

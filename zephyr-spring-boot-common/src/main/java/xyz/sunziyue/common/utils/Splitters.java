@@ -19,10 +19,10 @@ public class Splitters {
     public static List<Long> splitToLong(CharSequence sequence, Splitter splitter) {
         List<String> ss = splitter.splitToList(sequence);
         List<Long> res = Lists.newArrayListWithCapacity(ss.size());
-        Iterator var4 = ss.iterator();
+        Iterator iterator = ss.iterator();
 
-        while(var4.hasNext()) {
-            String s = (String)var4.next();
+        while(iterator.hasNext()) {
+            String s = (String)iterator.next();
             res.add(Long.parseLong(s));
         }
         return res;
@@ -31,10 +31,10 @@ public class Splitters {
     public static List<Integer> splitToInteger(CharSequence sequence, Splitter splitter) {
         List<String> ss = splitter.splitToList(sequence);
         List<Integer> res = Lists.newArrayListWithCapacity(ss.size());
-        Iterator var4 = ss.iterator();
+        Iterator iterator = ss.iterator();
 
-        while(var4.hasNext()) {
-            String s = (String)var4.next();
+        while(iterator.hasNext()) {
+            String s = (String)iterator.next();
             res.add(Integer.parseInt(s));
         }
         return res;

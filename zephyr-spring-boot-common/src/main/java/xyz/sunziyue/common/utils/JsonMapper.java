@@ -35,8 +35,8 @@ public class JsonMapper {
     public String toJson(Object object) {
         try {
             return this.mapper.writeValueAsString(object);
-        } catch (IOException var3) {
-            logger.warn("write to json string error:" + object, var3);
+        } catch (IOException ioException) {
+            logger.warn("write to json string error:" + object, ioException);
             return null;
         }
     }
@@ -47,8 +47,8 @@ public class JsonMapper {
         } else {
             try {
                 return this.mapper.readValue(jsonString, clazz);
-            } catch (IOException var4) {
-                logger.warn("parse json string error:" + jsonString, var4);
+            } catch (IOException ioException) {
+                logger.warn("parse json string error:" + jsonString, ioException);
                 return null;
             }
         }
@@ -60,8 +60,8 @@ public class JsonMapper {
         } else {
             try {
                 return this.mapper.readValue(jsonString, javaType);
-            } catch (Exception var4) {
-                logger.warn("parse json string error:" + jsonString, var4);
+            } catch (Exception e) {
+                logger.warn("parse json string error:" + jsonString, e);
                 return null;
             }
         }
@@ -82,10 +82,10 @@ public class JsonMapper {
     public <T> T update(String jsonString, T object) {
         try {
             return this.mapper.readerForUpdating(object).readValue(jsonString);
-        } catch (JsonProcessingException var4) {
-            logger.warn("update json string:" + jsonString + " to object:" + object + " error.", var4);
-        } catch (IOException var5) {
-            logger.warn("update json string:" + jsonString + " to object:" + object + " error.", var5);
+        } catch (JsonProcessingException jsonProcessingException) {
+            logger.warn("update json string:" + jsonString + " to object:" + object + " error.", jsonProcessingException);
+        } catch (IOException ioException) {
+            logger.warn("update json string:" + jsonString + " to object:" + object + " error.", ioException);
         }
 
         return null;

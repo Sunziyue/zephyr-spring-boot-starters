@@ -14,9 +14,6 @@ import java.util.List;
 public class SpringBootVFS extends VFS {
     private final ResourcePatternResolver resourceResolver = new PathMatchingResourcePatternResolver(this.getClass().getClassLoader());
 
-    public SpringBootVFS() {
-    }
-
     public boolean isValid() {
         return true;
     }
@@ -24,14 +21,10 @@ public class SpringBootVFS extends VFS {
     protected List<String> list(URL url, String path) throws IOException {
         Resource[] resources = this.resourceResolver.getResources("classpath*:" + path + "/**/*.class");
         List<String> resourcePaths = new ArrayList();
-        Resource[] var5 = resources;
-        int var6 = resources.length;
-
-        for(int var7 = 0; var7 < var6; ++var7) {
-            Resource resource = var5[var7];
+        for(int i = 0; i < resources.length; ++i) {
+            Resource resource = resources[i];
             resourcePaths.add(preserveSubpackageName(resource.getURI(), path));
         }
-
         return resourcePaths;
     }
 

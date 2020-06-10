@@ -23,10 +23,10 @@ public class BeanMapper {
 
     public static <T> List<T> mapList(Collection sourceList, Class<T> destinationClass) {
         List<T> destinationList = Lists.newArrayList();
-        Iterator var3 = sourceList.iterator();
+        Iterator iterator = sourceList.iterator();
 
-        while (var3.hasNext()) {
-            Object sourceObject = var3.next();
+        while (iterator.hasNext()) {
+            Object sourceObject = iterator.next();
             T destinationObject = dozer.map(sourceObject, destinationClass);
             destinationList.add(destinationObject);
         }
@@ -41,11 +41,9 @@ public class BeanMapper {
     public static Map<String, Object> convertObjectToMap(Object obj) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
         Map<String, Object> objectAsMap = new HashMap();
         BeanInfo info = Introspector.getBeanInfo(obj.getClass());
-        PropertyDescriptor[] var3 = info.getPropertyDescriptors();
-        int var4 = var3.length;
-
-        for (int var5 = 0; var5 < var4; ++var5) {
-            PropertyDescriptor pd = var3[var5];
+        PropertyDescriptor[] propertyDescriptors = info.getPropertyDescriptors();
+        for (int i = 0; i < propertyDescriptors.length; ++i) {
+            PropertyDescriptor pd = propertyDescriptors[i];
             Method reader = pd.getReadMethod();
             if (reader != null && !reader.isAccessible()) {
                 reader.setAccessible(Boolean.TRUE);

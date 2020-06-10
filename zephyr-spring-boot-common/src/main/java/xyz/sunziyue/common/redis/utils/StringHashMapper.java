@@ -27,19 +27,19 @@ public class StringHashMapper<T> {
     public Map<String, String> toHash(T object) {
         Map<String, String> hash = (Map) this.mapper.getMapper().convertValue(object, this.mapType);
         List<String> nullKeys = Lists.newArrayListWithCapacity(hash.size());
-        Iterator var4 = hash.entrySet().iterator();
+        Iterator iterator = hash.entrySet().iterator();
 
-        while (var4.hasNext()) {
-            Entry<String, String> entry = (Entry) var4.next();
+        while (iterator.hasNext()) {
+            Entry<String, String> entry = (Entry) iterator.next();
             if (entry.getValue() == null) {
                 nullKeys.add(entry.getKey());
             }
         }
 
-        var4 = nullKeys.iterator();
+        iterator = nullKeys.iterator();
 
-        while (var4.hasNext()) {
-            String nullKey = (String) var4.next();
+        while (iterator.hasNext()) {
+            String nullKey = (String) iterator.next();
             hash.remove(nullKey);
         }
 

@@ -74,11 +74,9 @@ public final class Arguments {
     }
 
     public static boolean isDecimal(String str) {
-        char[] var1 = str.toCharArray();
-        int var2 = var1.length;
-
-        for(int var3 = 0; var3 < var2; ++var3) {
-            char c = var1[var3];
+        char[] chars = str.toCharArray();
+        for(int i = 0; i < chars.length; ++i) {
+            char c = chars[i];
             if (c < '0' || c > '9') {
                 return false;
             }
