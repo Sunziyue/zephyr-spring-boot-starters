@@ -23,7 +23,6 @@ public abstract class RedisBaseDao<T> {
     protected final JedisTemplate template;
     protected final Class<T> entityClass;
 
-    @Autowired
     public RedisBaseDao(JedisTemplate template) {
         this.template = template;
         this.entityClass = (Class) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[0];

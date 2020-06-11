@@ -21,15 +21,12 @@ public class RedisAutoConfiguration {
     @Autowired
     private RedisProperties properties;
 
-    public RedisAutoConfiguration() {
-    }
-
     @Bean
     public JedisPoolConfig jedisPoolConfig() {
         JedisPoolConfig config = new JedisPoolConfig();
         config.setMaxTotal(this.properties.getMaxTotal());
         config.setMaxIdle(this.properties.getMaxIdle());
-        config.setMaxWaitMillis((long)this.properties.getMaxWaitMillis());
+        config.setMaxWaitMillis(this.properties.getMaxWaitMillis());
         config.setTestOnBorrow(this.properties.isTestOnBorrow());
         return config;
     }
