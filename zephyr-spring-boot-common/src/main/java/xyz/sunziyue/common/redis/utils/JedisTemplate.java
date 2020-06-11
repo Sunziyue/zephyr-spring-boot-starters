@@ -20,8 +20,6 @@ public class JedisTemplate {
 
     public <T> T execute(JedisAction<T> jedisAction, int dbIndex) throws JedisException {
         Jedis jedis = null;
-        boolean broken = false;
-
         T t;
         try {
             jedis = this.jedisPool.getResource();
@@ -29,10 +27,9 @@ public class JedisTemplate {
             t = jedisAction.action(jedis);
         } catch (JedisConnectionException jedisConnectionException) {
             log.error("Redis connection lost.", jedisConnectionException);
-            broken = true;
             throw jedisConnectionException;
         } finally {
-            this.closeResource(jedis, broken);
+            this.closeResource(jedis);
         }
 
         return t;
@@ -44,7 +41,6 @@ public class JedisTemplate {
 
     public void execute(JedisActionNoResult jedisAction, int dbIndex) throws JedisException {
         Jedis jedis = null;
-        boolean broken = false;
 
         try {
             jedis = this.jedisPool.getResource();
@@ -52,21 +48,16 @@ public class JedisTemplate {
             jedisAction.action(jedis);
         } catch (JedisConnectionException jedisConnectionException) {
             log.error("Redis connection lost.", jedisConnectionException);
-            broken = true;
             throw jedisConnectionException;
         } finally {
-            this.closeResource(jedis, broken);
+            this.closeResource(jedis);
         }
 
     }
 
-    protected void closeResource(Jedis jedis, boolean connectionBroken) {
+    protected void closeResource(Jedis jedis) {
         if (jedis != null) {
-            if (connectionBroken) {
-                this.jedisPool.destroy();
-            } else {
-                this.jedisPool.close();
-            }
+            jedis.close();
         }
 
     }
