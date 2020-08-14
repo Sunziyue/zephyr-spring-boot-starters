@@ -9,6 +9,7 @@ import redis.clients.jedis.Response;
 import xyz.sunziyue.common.redis.utils.JedisTemplate;
 import xyz.sunziyue.common.redis.utils.KeyUtils;
 import xyz.sunziyue.common.redis.utils.StringHashMapper;
+import xyz.sunziyue.common.utils.Arguments;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Collections;
@@ -29,21 +30,21 @@ public abstract class RedisBaseDao<T> {
     }
 
     public List<T> findByIds(Iterable<String> ids) {
-        return this.findByKeys(ids, id -> KeyUtils.entityId(RedisBaseDao.this.entityClass, id));
+        return this.findByKeys(ids, id -> KeyUtils.entityId(this.entityClass, id));
     }
 
     public List<T> findByKeys(final Iterable<String> keys, final Function<String, String> keyGen) {
-        if (Iterables.isEmpty(keys)) {
+        if (Arguments.isEmpty(keys)) {
             return Collections.emptyList();
         } else {
             List<Response<Map<String, String>>> result = this.template.execute((Jedis jedi) -> {
-                List<Response<Map<String, String>>> result1 = Lists.newArrayListWithCapacity(Iterables.size(keys));
-                Pipeline p = jedi.pipelined();
+                List<Response<Map<String, String>>> responseList = Lists.newArrayListWithCapacity(Iterables.size(keys));
+                Pipeline pipelined = jedi.pipelined();
                 for (String key : keys) {
-                    result1.add(p.hgetAll(keyGen.apply(key)));
+                    responseList.add(pipelined.hgetAll(keyGen.apply(key)));
                 }
-                p.sync();
-                return result1;
+                pipelined.sync();
+                return responseList;
             });
             List<T> entities = Lists.newArrayListWithCapacity(result.size());
             for (Response<Map<String, String>> response : result) {
@@ -53,14 +54,22 @@ public abstract class RedisBaseDao<T> {
         }
     }
 
-    protected T findByKey(final Long id) {
+    public T findByKey(final Long id) {
         Map<String, String> hash = this.template.execute((Jedis jedi) -> jedi.hgetAll(KeyUtils.entityId(this.entityClass, id)));
         return this.stringHashMapper.fromHash(hash);
     }
 
-    protected T findByKey(final String key) {
+    public T findByKey(final String key) {
         Map<String, String> hash = this.template.execute((Jedis jedi) -> jedi.hgetAll(KeyUtils.entityId(this.entityClass, key)));
         return this.stringHashMapper.fromHash(hash);
+    }
+
+    public Long addByKey(final String Key, T t) {
+        return this.template.execute((Jedis jedi) -> jedi.hset(KeyUtils.entityId(this.entityClass, Key), this.stringHashMapper.toHash(t)));
+    }
+
+    public Long addByKey(final Long id,  T t) {
+        return this.template.execute((Jedis jedi) -> jedi.hset(KeyUtils.entityId(this.entityClass, id), this.stringHashMapper.toHash(t)));
     }
 
     public Long newId() {
