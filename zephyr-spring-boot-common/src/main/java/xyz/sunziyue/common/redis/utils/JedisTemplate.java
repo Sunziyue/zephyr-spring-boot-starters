@@ -1,17 +1,21 @@
 package xyz.sunziyue.common.redis.utils;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.exceptions.JedisConnectionException;
 import redis.clients.jedis.exceptions.JedisException;
 import redis.clients.jedis.util.Pool;
 
+@Data
 @Slf4j
 public class JedisTemplate {
-    private final Pool<Jedis> jedisPool;
+    private final Pool<Jedis> jediPool;
 
-    public JedisTemplate(Pool<Jedis> jedisPool) {
-        this.jedisPool = jedisPool;
+    @Autowired
+    public JedisTemplate(Pool<Jedis> jediPool) {
+        this.jediPool = jediPool;
     }
 
     public <T> T execute(JedisAction<T> jedisAction) throws JedisException {
@@ -22,7 +26,7 @@ public class JedisTemplate {
         Jedis jedis = null;
         T t;
         try {
-            jedis = this.jedisPool.getResource();
+            jedis = this.jediPool.getResource();
             jedis.select(dbIndex);
             t = jedisAction.action(jedis);
         } catch (JedisConnectionException jedisConnectionException) {
@@ -43,7 +47,7 @@ public class JedisTemplate {
         Jedis jedis = null;
 
         try {
-            jedis = this.jedisPool.getResource();
+            jedis = this.jediPool.getResource();
             jedis.select(dbIndex);
             jedisAction.action(jedis);
         } catch (JedisConnectionException jedisConnectionException) {
@@ -60,10 +64,6 @@ public class JedisTemplate {
             jedis.close();
         }
 
-    }
-
-    public Pool<Jedis> getJedisPool() {
-        return this.jedisPool;
     }
 
     public interface JedisActionNoResult {

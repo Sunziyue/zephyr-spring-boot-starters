@@ -2,6 +2,9 @@ package xyz.sunziyue.common.redis.utils;
 
 import com.fasterxml.jackson.databind.JavaType;
 import com.google.common.collect.Lists;
+import lombok.Builder;
+import lombok.Data;
+import xyz.sunziyue.common.utils.Arguments;
 import xyz.sunziyue.common.utils.JsonMapper;
 
 import java.util.HashMap;
@@ -16,7 +19,7 @@ public class StringHashMapper<T> {
     private final JavaType mapType;
 
     public StringHashMapper(Class<T> type) {
-        this.mapType = this.mapper.createCollectionType(HashMap.class, new Class[]{String.class, String.class});
+        this.mapType = this.mapper.createCollectionType(HashMap.class, String.class, String.class);
         this.userType = this.mapper.getMapper().getTypeFactory().constructType(type);
     }
 
@@ -25,24 +28,12 @@ public class StringHashMapper<T> {
     }
 
     public Map<String, String> toHash(T object) {
-        Map<String, String> hash = (Map) this.mapper.getMapper().convertValue(object, this.mapType);
-        List<String> nullKeys = Lists.newArrayListWithCapacity(hash.size());
-        Iterator iterator = hash.entrySet().iterator();
-
-        while (iterator.hasNext()) {
-            Entry<String, String> entry = (Entry) iterator.next();
-            if (entry.getValue() == null) {
-                nullKeys.add(entry.getKey());
+        Map<String, String> hash = this.mapper.getMapper().convertValue(object, this.mapType);
+        hash.forEach((key,val)->{
+            if (Arguments.isEmpty(val)) {
+                hash.remove(key);
             }
-        }
-
-        iterator = nullKeys.iterator();
-
-        while (iterator.hasNext()) {
-            String nullKey = (String) iterator.next();
-            hash.remove(nullKey);
-        }
-
+        });
         return hash;
     }
 }
