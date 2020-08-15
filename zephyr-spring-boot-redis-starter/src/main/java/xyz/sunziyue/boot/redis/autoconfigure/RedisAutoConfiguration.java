@@ -21,6 +21,11 @@ public class RedisAutoConfiguration {
     @Autowired
     private RedisProperties properties;
 
+    /**
+     * 配置 JedisPoolConfig jedis线程池配置类
+     * 并加入到 IOC 管理
+     * @return JedisPoolConfig
+     */
     @Bean
     public JedisPoolConfig jedisPoolConfig() {
         JedisPoolConfig config = new JedisPoolConfig();
@@ -31,6 +36,12 @@ public class RedisAutoConfiguration {
         return config;
     }
 
+    /**
+     * 配置 jedis线程池
+     * 并加入到 IOC 管理
+     * @param poolConfig jedis线程池配置类
+     * @return redisPool
+     */
     @Bean
     public Pool<Jedis> redisPool(JedisPoolConfig poolConfig) {
         if (this.properties.isCluster()) {
@@ -44,6 +55,12 @@ public class RedisAutoConfiguration {
         }
     }
 
+    /**
+     * 配置 Redis线程池模板 类
+     * 并加入到 IOC 管理
+     * @param pool jedis 线程池
+     * @return Redis线程池模板
+     */
     @Bean
     public JedisTemplate jedisTemplate(Pool<Jedis> pool) {
         return new JedisTemplate(pool);

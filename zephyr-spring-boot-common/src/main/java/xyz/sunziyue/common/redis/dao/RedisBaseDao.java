@@ -29,10 +29,21 @@ public abstract class RedisBaseDao<T> {
         this.stringHashMapper = new StringHashMapper<>(this.entityClass);
     }
 
+    /**
+     * 通过Id集合查找对象
+     * @param ids Id集合
+     * @return 对象集合
+     */
     public List<T> findByIds(Iterable<String> ids) {
         return this.findByKeys(ids, id -> KeyUtils.entityId(this.entityClass, id));
     }
 
+    /**
+     * 通过Id集合查找对象
+     * @param keys Key集合
+     * @param keyGen Key命名规则
+     * @return 对象集合
+     */
     public List<T> findByKeys(final Iterable<String> keys, final Function<String, String> keyGen) {
         if (Arguments.isEmpty(keys)) {
             return Collections.emptyList();
@@ -54,24 +65,53 @@ public abstract class RedisBaseDao<T> {
         }
     }
 
+    /**
+     * 通过 ID 查找对象
+     * @param id Key
+     * @return 对象
+     */
     public T findByKey(final Long id) {
         Map<String, String> hash = this.template.execute((Jedis jedi) -> jedi.hgetAll(KeyUtils.entityId(this.entityClass, id)));
         return this.stringHashMapper.fromHash(hash);
     }
 
+    /**
+     * 通过 Key 查找对象
+     * @param key Key
+     * @return 对象
+     */
     public T findByKey(final String key) {
         Map<String, String> hash = this.template.execute((Jedis jedi) -> jedi.hgetAll(KeyUtils.entityId(this.entityClass, key)));
         return this.stringHashMapper.fromHash(hash);
     }
 
+    /**
+     * 增加一个Hash对象
+     * @param Key key
+     * @param t 对象
+     * @return 增加的个数
+     */
     public Long addByKey(final String Key, T t) {
         return this.template.execute((Jedis jedi) -> jedi.hset(KeyUtils.entityId(this.entityClass, Key), this.stringHashMapper.toHash(t)));
     }
 
+    /**
+     * 增加一个Hash对象
+     * @param id key
+     * @param t 对象
+     * @return 增加的个数
+     */
     public Long addByKey(final Long id,  T t) {
         return this.template.execute((Jedis jedi) -> jedi.hset(KeyUtils.entityId(this.entityClass, id), this.stringHashMapper.toHash(t)));
     }
 
+    /**
+     * 将 key 中储存的数字值增一
+     * key[user:count]  val[20]
+     * newId();
+     * key[user:count]  val[21]
+     * @return 新id
+     */
     public Long newId() {
         return this.template.execute((Jedis jedi) -> jedi.incr(KeyUtils.entityCount(this.entityClass)));
     }
