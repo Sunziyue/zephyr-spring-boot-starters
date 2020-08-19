@@ -23,11 +23,11 @@ import java.util.Map;
 import java.util.UUID;
 
 @Slf4j
-public class TerminusMQSubscriberManager implements ApplicationContextAware {
+public class Consumer implements ApplicationContextAware {
     private final RocketMQProperties properties;
 
     @Autowired
-    public TerminusMQSubscriberManager(RocketMQProperties properties) {
+    public Consumer(RocketMQProperties properties) {
         this.properties = properties;
     }
 
@@ -71,6 +71,5 @@ public class TerminusMQSubscriberManager implements ApplicationContextAware {
                 }
             }
         }
-
     }
 }

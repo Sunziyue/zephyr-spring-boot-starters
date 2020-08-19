@@ -4,6 +4,7 @@ import org.apache.rocketmq.client.exception.MQClientException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import xyz.sunziyue.boot.rocket.mq.core.Consumer;
 import xyz.sunziyue.boot.rocket.mq.core.Producer;
 import xyz.sunziyue.boot.rocket.mq.properties.RocketMQProperties;
 
@@ -20,5 +21,10 @@ public class RocketMQAutoConfiguration {
     @Bean
     public Producer producer() throws MQClientException {
         return new Producer(this.properties);
+    }
+
+    @Bean
+    public Consumer consumer() {
+        return new Consumer(this.properties);
     }
 }
