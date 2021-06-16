@@ -34,17 +34,6 @@
         <swagger.version>2.9.0</swagger.version>
         <swagger.annotation.version>1.6.1</swagger.annotation.version>
         <fastjson.version>1.2.70</fastjson.version>
-        <rocketmq-client.version>4.7.1</rocketmq-client.version>
-        <gson.version>2.8.6</gson.version>
-        <!--        <spring.version>5.2.6.RELEASE</spring.version>-->
-        <!--        <dubbo.version>2.6.8</dubbo.version>-->
-        <!--        <commons-dbcp.version>1.4</commons-dbcp.version>-->
-        <!--        <zookeeper.version>3.6.1</zookeeper.version>-->
-        <!--        <terminus-common.version>2.0.3.RELEASE</terminus-common.version>-->
-        <!--        <terminus-session.version>1.7.0.RELEASE</terminus-session.version>-->
-        <!--        <terminus-zookeeper.version>2.2.RELEASE</terminus-zookeeper.version>-->
-        <!--        <assertj.version>3.16.1</assertj.version>-->
-        <!--        <spring.platform.version>2.0.0.RELEASE</spring.platform.version>-->
     </properties>
 
     <dependencies>
@@ -204,16 +193,6 @@
             <!-- zephy-springr-boot-swagger-starter END -->
 
             <!-- zephy-springr-boot-rocket-mq-starter START -->
-            <dependency>
-                <groupId>org.apache.rocketmq</groupId>
-                <artifactId>rocketmq-client</artifactId>
-                <version>${rocketmq-client.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.code.gson</groupId>
-                <artifactId>gson</artifactId>
-                <version>${gson.version}</version>
-            </dependency>
             <!-- zephy-springr-boot-rocket-mq-starter END -->
 
         </dependencies>
