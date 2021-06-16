@@ -11,8 +11,8 @@ import xyz.sunziyue.boot.rocket.mq.exception.MessageSendException;
 import xyz.sunziyue.boot.rocket.mq.properties.RocketMQProperties;
 
 public class Producer {
-    private static Gson gson = new Gson();
-    private DefaultMQProducer producer;
+    private static final Gson gson = new Gson();
+    private final DefaultMQProducer producer;
 
     @Autowired
     public Producer(RocketMQProperties properties) throws MQClientException {

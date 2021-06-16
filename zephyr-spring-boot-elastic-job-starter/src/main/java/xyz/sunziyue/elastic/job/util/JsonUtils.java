@@ -24,16 +24,16 @@ public class JsonUtils {
             StringWriter writer = new StringWriter();
             mapper.writeValue(writer, obj);
             return writer.toString();
-        } catch (Exception var2) {
-            throw new RuntimeException("序列化对象【" + obj + "】时出错", var2);
+        } catch (Exception e) {
+            throw new RuntimeException("序列化对象【" + obj + "】时出错", e);
         }
     }
 
     public static <T> T toBean(Class<T> entityClass, String jsonString) {
         try {
             return mapper.readValue(jsonString, entityClass);
-        } catch (Exception var3) {
-            throw new RuntimeException("JSON【" + jsonString + "】转对象时出错", var3);
+        } catch (Exception e) {
+            throw new RuntimeException("JSON【" + jsonString + "】转对象时出错", e);
         }
     }
 
@@ -60,14 +60,14 @@ public class JsonUtils {
                 Map<String, Object> map = Maps.newHashMap();
                 map.put("success", true);
                 return "{\"success\":true," + toString(obj) + ",\"message\":\"" + message + "\"}";
-            } catch (Exception var3) {
-                throw new RuntimeException("序列化对象【" + obj + "】时出错", var3);
+            } catch (Exception e) {
+                throw new RuntimeException("序列化对象【" + obj + "】时出错", e);
             }
         }
     }
 
     public static String getJsonError(Object obj) {
-        return getJsonError(obj, (String)null);
+        return getJsonError(obj, null);
     }
 
     public static String getJsonError(Object obj, String message) {
@@ -77,18 +77,18 @@ public class JsonUtils {
             try {
                 obj = parseIfException(obj);
                 return "{\"success\":false,\"data\":" + toString(obj) + ",\"message\":\"" + message + "\"}";
-            } catch (Exception var3) {
-                throw new RuntimeException("序列化对象【" + obj + "】时出错", var3);
+            } catch (Exception e) {
+                throw new RuntimeException("序列化对象【" + obj + "】时出错", e);
             }
         }
     }
 
     public static Object parseIfException(Object obj) {
-        return obj instanceof Exception ? getErrorMessage((Exception)obj, (String)null) : obj;
+        return obj instanceof Exception ? getErrorMessage((Exception)obj, null) : obj;
     }
 
     public static String getErrorMessage(Exception e, String defaultMessage) {
-        return defaultMessage != null ? defaultMessage : null;
+        return defaultMessage;
     }
 
     public static ObjectMapper getMapper() {

@@ -10,7 +10,7 @@ public final class Arguments {
     public Arguments() {
     }
 
-    public static <T extends Iterable> boolean isNullOrEmpty(T t) {
+    public static <T extends Iterable<?>> boolean isNullOrEmpty(T t) {
         return isNull(t) || isEmpty(t);
     }
 
@@ -26,9 +26,9 @@ public final class Arguments {
         return Strings.isNullOrEmpty(s);
     }
 
-    public static <T extends Iterable> boolean isEmpty(T t) {
+    public static <T extends Iterable<?>> boolean isEmpty(T t) {
         if (t instanceof Collection) {
-            return ((Collection)t).isEmpty();
+            return ((Collection<?>)t).isEmpty();
         } else {
             return !t.iterator().hasNext();
         }
@@ -38,13 +38,13 @@ public final class Arguments {
         return !isEmpty(s);
     }
 
-    public static <T extends Iterable> boolean notEmpty(T l) {
-        if (isNull(l)) {
+    public static <T extends Iterable<?>> boolean notEmpty(T t) {
+        if (isNull(t)) {
             return false;
-        } else if (l instanceof Collection) {
-            return !((Collection)l).isEmpty();
+        } else if (t instanceof Collection) {
+            return !((Collection<?>)t).isEmpty();
         } else {
-            return l.iterator().hasNext();
+            return t.iterator().hasNext();
         }
     }
 
@@ -75,8 +75,7 @@ public final class Arguments {
 
     public static boolean isDecimal(String str) {
         char[] chars = str.toCharArray();
-        for(int i = 0; i < chars.length; ++i) {
-            char c = chars[i];
+        for (char c : chars) {
             if (c < '0' || c > '9') {
                 return false;
             }
@@ -88,8 +87,7 @@ public final class Arguments {
     public static boolean isNumberic(String numStr) {
         boolean flag = false;
         char[] numCharArr = numStr.toCharArray();
-        for(int i = 0; i < numCharArr.length; ++i) {
-            char num = numCharArr[i];
+        for (char num : numCharArr) {
             if (num == '.' && !flag) {
                 flag = true;
             } else {

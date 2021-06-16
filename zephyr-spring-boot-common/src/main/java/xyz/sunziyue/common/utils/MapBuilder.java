@@ -5,11 +5,11 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class MapBuilder<K, V> {
-    private Map<K, V> map;
+    private final Map<K, V> map;
     private boolean ignoreNullValue = false;
 
     private MapBuilder() {
-        this.map = new HashMap();
+        this.map = new HashMap<>();
     }
 
     private MapBuilder(Map<K, V> map) {
@@ -17,19 +17,19 @@ public class MapBuilder<K, V> {
     }
 
     public static <K, V> MapBuilder<K, V> of() {
-        return new MapBuilder();
+        return new MapBuilder<>();
     }
 
     public static <K, V> MapBuilder<K, V> of(Map<K, V> map) {
-        return new MapBuilder(map);
+        return new MapBuilder<>(map);
     }
 
     public static <K, V> MapBuilder<K, V> newHashMap() {
-        return of(new HashMap());
+        return of(new HashMap<>());
     }
 
     public static <K, V> MapBuilder<K, V> newTreeMap() {
-        return of(new TreeMap());
+        return of(new TreeMap<>());
     }
 
     public MapBuilder<K, V> ignoreNullValue() {

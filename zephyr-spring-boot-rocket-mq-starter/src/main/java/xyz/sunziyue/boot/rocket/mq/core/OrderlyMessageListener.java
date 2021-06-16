@@ -11,7 +11,7 @@ import java.util.List;
 
 public class OrderlyMessageListener extends AbstractMessageListener implements MessageListenerOrderly {
 
-    OrderlyMessageListener(Class messageType, Object bean, Method method) {
+    OrderlyMessageListener(Class<?> messageType, Object bean, Method method) {
         super(messageType, bean, method);
     }
 

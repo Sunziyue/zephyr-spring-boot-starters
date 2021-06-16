@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.cache.ChildData;
 import org.apache.curator.framework.recipes.cache.PathChildrenCache;
+import org.apache.curator.framework.recipes.cache.PathChildrenCacheEvent;
 import org.apache.curator.framework.recipes.cache.PathChildrenCacheListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
@@ -41,7 +42,7 @@ public class JobService {
     private ZookeeperRegistryCenter zookeeperRegistryCenter;
     @Autowired
     private ApplicationContext applicationContext;
-    private static Map<String, AtomicInteger> JOB_ADD_COUNT = Maps.newConcurrentMap();
+    private static final Map<String, AtomicInteger> JOB_ADD_COUNT = Maps.newConcurrentMap();
     public void addJob(Job job) {
         JobCoreConfiguration coreConfiguration = JobCoreConfiguration.newBuilder(job.getJobName(), job.getCron(), job.getShardingTotalCount()).shardingItemParameters(job.getShardingItemParameters()).description(job.getDescription()).jobParameter(job.getJobParameter()).failover(job.isFailover()).jobProperties(JobProperties.JobPropertiesEnum.JOB_EXCEPTION_HANDLER.getKey(), job.getJobProperties().getJobExceptionHandler()).jobProperties(JobProperties.JobPropertiesEnum.EXECUTOR_SERVICE_HANDLER.getKey(), job.getJobProperties().getJobExceptionHandler()).build();
         LiteJobConfiguration jobConfig = null;
@@ -59,13 +60,13 @@ public class JobService {
             typeConfig = new ScriptJobConfiguration(coreConfiguration, job.getScriptCommandLine());
         }
 
-        LiteJobConfiguration.newBuilder((JobTypeConfiguration)typeConfig).overwrite(job.isOverwrite()).disabled(job.isDisabled()).monitorPort(job.getMonitorPort()).monitorExecution(job.isMonitorExecution()).maxTimeDiffSeconds(job.getMaxTimeDiffSeconds()).jobShardingStrategyClass(job.getJobShardingStrategyClass()).reconcileIntervalMinutes(job.getReconcileIntervalMinutes()).build();
+        LiteJobConfiguration.newBuilder(typeConfig).overwrite(job.isOverwrite()).disabled(job.isDisabled()).monitorPort(job.getMonitorPort()).monitorExecution(job.isMonitorExecution()).maxTimeDiffSeconds(job.getMaxTimeDiffSeconds()).jobShardingStrategyClass(job.getJobShardingStrategyClass()).reconcileIntervalMinutes(job.getReconcileIntervalMinutes()).build();
         List<BeanDefinition> elasticJobListeners = this.getElasticJobListeners(job);
         BeanDefinitionBuilder factory = BeanDefinitionBuilder.rootBeanDefinition(SpringJobScheduler.class);
         factory.setScope("prototype");
         BeanDefinitionBuilder jobEventRdbFactory;
         if (Objects.equals("ScriptJob", jobType)) {
-            factory.addConstructorArgValue((Object)null);
+            factory.addConstructorArgValue(null);
         } else {
             jobEventRdbFactory = BeanDefinitionBuilder.rootBeanDefinition(job.getJobClass());
             factory.addConstructorArgValue(jobEventRdbFactory.getBeanDefinition());
@@ -88,7 +89,7 @@ public class JobService {
     }
 
     private List<BeanDefinition> getElasticJobListeners(Job job) {
-        List<BeanDefinition> result = new ManagedList(2);
+        List<BeanDefinition> result = new ManagedList<>(2);
         String listeners = job.getListener();
         if (StringUtils.hasText(listeners)) {
             result.add(ListenerBeanDefinitionUtil.getJobListenerBeanDefinition(listeners));
@@ -114,19 +115,17 @@ public class JobService {
         PathChildrenCache childrenCache = new PathChildrenCache(client, "/", true);
         PathChildrenCacheListener childrenCacheListener = (childClient, event) -> {
             ChildData data = event.getData();
-            switch(event.getType()) {
-                case CHILD_ADDED:
-                    String config = new String((byte[])childClient.getData().forPath(data.getPath() + "/config"));
-                    Job job = (Job) JsonUtils.toBean(Job.class, config);
-                    if (!JOB_ADD_COUNT.containsKey(job.getJobName())) {
-                        JOB_ADD_COUNT.put(job.getJobName(), new AtomicInteger());
-                    }
+            if (event.getType() == PathChildrenCacheEvent.Type.CHILD_ADDED) {
+                String config = new String(childClient.getData().forPath(data.getPath() + "/config"));
+                Job job = JsonUtils.toBean(Job.class, config);
+                if (!JOB_ADD_COUNT.containsKey(job.getJobName())) {
+                    JOB_ADD_COUNT.put(job.getJobName(), new AtomicInteger());
+                }
 
-                    int count = ((AtomicInteger)JOB_ADD_COUNT.get(job.getJobName())).incrementAndGet();
-                    if (count > 1) {
-                        this.addJob(job);
-                    }
-                default:
+                int count = JOB_ADD_COUNT.get(job.getJobName()).incrementAndGet();
+                if (count > 1) {
+                    this.addJob(job);
+                }
             }
         };
         childrenCache.getListenable().addListener(childrenCacheListener);

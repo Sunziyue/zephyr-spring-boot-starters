@@ -6,17 +6,16 @@ import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.util.JSONPObject;
 import com.fasterxml.jackson.datatype.guava.GuavaModule;
 import com.google.common.base.Strings;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.text.DateFormat;
 
+@Slf4j
 public class JsonMapper {
-    private static Logger logger = LoggerFactory.getLogger(JsonMapper.class);
     public static final JsonMapper JSON_NON_EMPTY_MAPPER;
     public static final JsonMapper JSON_NON_DEFAULT_MAPPER;
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     private JsonMapper(Include include) {
         this.mapper.setSerializationInclusion(include);
@@ -36,7 +35,7 @@ public class JsonMapper {
         try {
             return this.mapper.writeValueAsString(object);
         } catch (IOException ioException) {
-            logger.warn("write to json string error:" + object, ioException);
+            log.warn("write to json string error:{}", object, ioException);
             return null;
         }
     }
@@ -48,7 +47,7 @@ public class JsonMapper {
             try {
                 return this.mapper.readValue(jsonString, clazz);
             } catch (IOException ioException) {
-                logger.warn("parse json string error:" + jsonString, ioException);
+                log.warn("parse json string error:{}", jsonString, ioException);
                 return null;
             }
         }
@@ -61,7 +60,7 @@ public class JsonMapper {
             try {
                 return this.mapper.readValue(jsonString, javaType);
             } catch (Exception e) {
-                logger.warn("parse json string error:" + jsonString, e);
+                log.warn("parse json string error:{}", jsonString, e);
                 return null;
             }
         }
@@ -82,10 +81,8 @@ public class JsonMapper {
     public <T> T update(String jsonString, T object) {
         try {
             return this.mapper.readerForUpdating(object).readValue(jsonString);
-        } catch (JsonProcessingException jsonProcessingException) {
-            logger.warn("update json string:" + jsonString + " to object:" + object + " error.", jsonProcessingException);
-        } catch (IOException ioException) {
-            logger.warn("update json string:" + jsonString + " to object:" + object + " error.", ioException);
+        } catch (IOException e) {
+            log.warn("update json string:{}, to object:{} error.", jsonString, object, e);
         }
 
         return null;

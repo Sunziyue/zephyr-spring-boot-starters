@@ -33,14 +33,14 @@ public class MybatisProperties {
     }
 
     public Resource[] resolveMapperLocations() {
-        List<Resource> resources = new ArrayList();
+        List<Resource> resources = new ArrayList<>();
         if (this.mapperLocations != null) {
-            for (int i = 0; i < this.mapperLocations.length; ++i) {
+            for (String mapperLocation : this.mapperLocations) {
                 try {
-                    Resource[] mappers = (new PathMatchingResourcePatternResolver()).getResources(this.mapperLocations[i]);
+                    Resource[] mappers = (new PathMatchingResourcePatternResolver()).getResources(mapperLocation);
                     resources.addAll(Arrays.asList(mappers));
                 } catch (IOException e) {
-                    log.error("Mybatis.mapperLocations.{} is Configuration failed;\nERROR:{}", this.mapperLocations[i], Throwables.getStackTraceAsString(e));
+                    log.error("Mybatis.mapperLocations.{} is Configuration failed;\nERROR:{}", mapperLocation, Throwables.getStackTraceAsString(e));
                 }
             }
         } else {
@@ -48,7 +48,7 @@ public class MybatisProperties {
         }
 
         Resource[] mapperLocations = new Resource[resources.size()];
-        mapperLocations = (Resource[]) resources.toArray(mapperLocations);
+        mapperLocations = resources.toArray(mapperLocations);
         return mapperLocations;
     }
 

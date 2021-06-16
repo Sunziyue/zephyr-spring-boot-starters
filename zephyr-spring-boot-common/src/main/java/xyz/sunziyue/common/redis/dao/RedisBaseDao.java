@@ -12,6 +12,7 @@ import xyz.sunziyue.common.redis.utils.StringHashMapper;
 import xyz.sunziyue.common.utils.Arguments;
 
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;

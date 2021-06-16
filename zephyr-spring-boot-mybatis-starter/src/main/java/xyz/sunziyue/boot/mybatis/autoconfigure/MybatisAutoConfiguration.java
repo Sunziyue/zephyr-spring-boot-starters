@@ -29,8 +29,8 @@ import java.util.List;
 @EnableConfigurationProperties({MybatisProperties.class})
 @AutoConfigureAfter({DataSourceAutoConfiguration.class})
 public class MybatisAutoConfiguration {
-    private DatabaseIdProvider databaseIdProvider;
-    private MybatisProperties mybatisProperties;
+    private final DatabaseIdProvider databaseIdProvider;
+    private final MybatisProperties mybatisProperties;
     @Autowired(
             required = false
     )
@@ -38,7 +38,7 @@ public class MybatisAutoConfiguration {
 
     @Autowired
     public MybatisAutoConfiguration(MybatisProperties mybatisProperties, ObjectProvider<DatabaseIdProvider> databaseIdProvider) {
-        this.databaseIdProvider = (DatabaseIdProvider)databaseIdProvider.getIfAvailable();
+        this.databaseIdProvider = databaseIdProvider.getIfAvailable();
         this.mybatisProperties = mybatisProperties;
     }
 
@@ -54,7 +54,8 @@ public class MybatisAutoConfiguration {
         factory.setDataSource(dataSource);
         factory.setVfs(SpringBootVFS.class);
         if (!ObjectUtils.isEmpty(this.interceptors)) {
-            factory.setPlugins((Interceptor[])this.interceptors.toArray(new Interceptor[this.interceptors.size()]));
+            Interceptor[] interceptorArray = new Interceptor[this.interceptors.size()];
+            factory.setPlugins(this.interceptors.toArray(interceptorArray));
         }
 
         if (this.databaseIdProvider != null) {

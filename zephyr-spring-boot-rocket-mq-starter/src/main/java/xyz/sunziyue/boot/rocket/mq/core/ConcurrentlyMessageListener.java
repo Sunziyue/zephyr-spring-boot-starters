@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ConcurrentlyMessageListener extends AbstractMessageListener implements MessageListenerConcurrently {
 
-    ConcurrentlyMessageListener(Class messageType, Object bean, Method method) {
+    ConcurrentlyMessageListener(Class<?> messageType, Object bean, Method method) {
         super(messageType, bean, method);
     }
 

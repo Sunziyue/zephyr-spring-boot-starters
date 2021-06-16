@@ -42,6 +42,9 @@ public class SwaggerAutoConfiguration {
     }
 
     private ApiInfo apiInfo() {
-        return (new ApiInfoBuilder()).title(String.format("%s 在线接口文档", this.swaggerProperties.getTitle())).version(this.swaggerProperties.getVersion()).build();
+        return new ApiInfoBuilder()
+                .title(String.format("%s 在线接口文档", this.swaggerProperties.getTitle()))
+                .version(this.swaggerProperties.getVersion())
+                .build();
     }
 }

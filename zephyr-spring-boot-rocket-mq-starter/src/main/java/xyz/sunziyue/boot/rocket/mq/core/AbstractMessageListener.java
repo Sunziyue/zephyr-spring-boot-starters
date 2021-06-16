@@ -9,11 +9,11 @@ import java.lang.reflect.Method;
 @Slf4j
 public class AbstractMessageListener {
     private static final Gson gson = new Gson();
-    private final Class messageType;
+    private final Class<?> messageType;
     private final Object bean;
     private final Method method;
 
-    AbstractMessageListener(Class messageType, Object bean, Method method) {
+    AbstractMessageListener(Class<?> messageType, Object bean, Method method) {
         this.messageType = messageType;
         this.bean = bean;
         this.method = method;

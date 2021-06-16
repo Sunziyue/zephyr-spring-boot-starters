@@ -21,19 +21,17 @@ public class TypeAliasPackageParser {
     }
 
     static Set<String> resolveTypeAliasPackageNames(String inputs) {
-        Set<String> result = new HashSet();
-        Iterator iterator = comma.split(inputs).iterator();
-        while(iterator.hasNext()) {
-            String input = (String)iterator.next();
+        Set<String> result = new HashSet<>();
+        for (String input : comma.split(inputs)) {
             result.addAll(resolvePackageNames(input));
         }
         return result;
     }
 
     static Set<String> resolvePackageNames(String input) {
-        Set<String> packageNames = new HashSet();
+        Set<String> packageNames = new HashSet<>();
         Matcher matcher = regex.matcher(input);
-        ArrayList matchPositions = new ArrayList();
+        ArrayList<MatchPosition> matchPositions = new ArrayList<>();
 
         while(matcher.find()) {
             matchPositions.add(new MatchPosition(matcher.start(), matcher.end(), matcher.group(1)));
@@ -54,39 +52,29 @@ public class TypeAliasPackageParser {
         current.put(currentIndex, "");
 
         int end;
-        for(Iterator iterator = matchPositions.iterator(); iterator.hasNext(); currentIndex = end) {
-            MatchPosition matchPosition = (MatchPosition)iterator.next();
+        for(Iterator<MatchPosition> iterator = matchPositions.iterator(); iterator.hasNext(); currentIndex = end) {
+            MatchPosition matchPosition = iterator.next();
             int start = matchPosition.start();
             end = matchPosition.end();
             String betweenCurrentAndStart = input.substring(currentIndex, start);
             String text = matchPosition.text();
-            Iterator iterator1 = or.split(text).iterator();
-
-            while(iterator1.hasNext()) {
-                String part = (String)iterator1.next();
-                Iterator iterator2 = current.get(currentIndex).iterator();
-
-                while(iterator2.hasNext()) {
-                    String c = (String)iterator2.next();
+            for (String part : or.split(text)) {
+                for (String c : current.get(currentIndex)) {
                     current.put(end, c + betweenCurrentAndStart + part);
                 }
             }
         }
-
         int length = input.length();
-        Iterator iterator = current.get(currentIndex).iterator();
-
+        Iterator<String> iterator = current.get(currentIndex).iterator();
         String packageName;
         while(iterator.hasNext()) {
-            packageName = (String)iterator.next();
+            packageName = iterator.next();
             String betweenLastMatchEndAndInputEnd = input.substring(currentIndex, length);
             current.put(length, packageName + betweenLastMatchEndAndInputEnd);
         }
-
         iterator = current.get(length).iterator();
-
         while(iterator.hasNext()) {
-            packageName = (String)iterator.next();
+            packageName = iterator.next();
             packageNames.add(packageName);
         }
 

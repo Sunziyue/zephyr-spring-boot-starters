@@ -97,7 +97,7 @@ public abstract class MybatisEnhancedDao<T, K extends Serializable> {
     }
 
     public Long count(Map<String, Object> criteria) {
-        return (Long)this.sqlSession.selectOne(this.sqlId("count"), criteria);
+        return this.sqlSession.selectOne(this.sqlId("count"), criteria);
     }
 
     public Paging<T> paging(Integer offset, Integer limit, T criteria) {
@@ -111,20 +111,20 @@ public abstract class MybatisEnhancedDao<T, K extends Serializable> {
         if (params.get("skipCount") != null && Boolean.parseBoolean(params.get("skipCount").toString())) {
             total = null;
         } else {
-            total = (Long)this.sqlSession.selectOne(this.sqlId("count"), criteria);
+            total = this.sqlSession.selectOne(this.sqlId("count"), criteria);
             if (total <= 0L) {
-                return new Paging(0L, Collections.emptyList());
+                return new Paging<>(0L, Collections.emptyList());
             }
         }
 
         params.put("offset", offset);
         params.put("limit", limit);
-        List<T> datas = this.sqlSession.selectList(this.sqlId("paging"), params);
-        return new Paging(total, datas);
+        List<T> dataList = this.sqlSession.selectList(this.sqlId("paging"), params);
+        return new Paging<>(total, dataList);
     }
 
     public Paging<T> paging(Integer offset, Integer limit) {
-        return this.paging(offset, limit, (Map)(new HashMap()));
+        return this.paging(offset, limit, new HashMap());
     }
 
     public Paging<T> paging(Integer offset, Integer limit, Map<String, Object> criteria) {
@@ -133,19 +133,18 @@ public abstract class MybatisEnhancedDao<T, K extends Serializable> {
         }
 
         Long total;
-        if (((Map)criteria).get("skipCount") != null && Boolean.parseBoolean(((Map)criteria).get("skipCount").toString())) {
+        if (criteria.get("skipCount") != null && Boolean.parseBoolean(criteria.get("skipCount").toString())) {
             total = null;
         } else {
-            total = (Long)this.sqlSession.selectOne(this.sqlId("count"), criteria);
+            total = this.sqlSession.selectOne(this.sqlId("count"), criteria);
             if (total <= 0L) {
-                return new Paging(0L, Collections.emptyList());
+                return new Paging<>(0L, Collections.emptyList());
             }
         }
-
-        ((Map)criteria).put("offset", offset);
-        ((Map)criteria).put("limit", limit);
-        List<T> datas = this.sqlSession.selectList(this.sqlId("paging"), criteria);
-        return new Paging(total, datas);
+        criteria.put("offset", offset);
+        criteria.put("limit", limit);
+        List<T> dataList = this.sqlSession.selectList(this.sqlId("paging"), criteria);
+        return new Paging<>(total, dataList);
     }
 
     public Paging<T> paging(Map<String, Object> criteria) {
@@ -154,17 +153,17 @@ public abstract class MybatisEnhancedDao<T, K extends Serializable> {
         }
 
         Long total;
-        if (((Map)criteria).get("skipCount") != null && Boolean.parseBoolean(((Map)criteria).get("skipCount").toString())) {
+        if (criteria.get("skipCount") != null && Boolean.parseBoolean(criteria.get("skipCount").toString())) {
             total = null;
         } else {
-            total = (Long)this.sqlSession.selectOne(this.sqlId("count"), criteria);
+            total = this.sqlSession.selectOne(this.sqlId("count"), criteria);
             if (total <= 0L) {
-                return new Paging(0L, Collections.emptyList());
+                return new Paging<>(0L, Collections.emptyList());
             }
         }
 
-        List<T> datas = this.sqlSession.selectList(this.sqlId("paging"), criteria);
-        return new Paging(total, datas);
+        List<T> dataList = this.sqlSession.selectList(this.sqlId("paging"), criteria);
+        return new Paging<>(total, dataList);
     }
 
     protected String sqlId(String id) {

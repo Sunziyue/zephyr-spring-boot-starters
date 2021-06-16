@@ -27,7 +27,6 @@ import xyz.sunziyue.elastic.job.bean.JobProperties;
 import xyz.sunziyue.elastic.job.service.JobService;
 import xyz.sunziyue.elastic.job.util.ListenerBeanDefinitionUtil;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -39,7 +38,7 @@ import java.util.Objects;
 public class JobConfigParser implements ApplicationContextAware {
     @Autowired
     private ZookeeperRegistryCenter zookeeperRegistryCenter;
-    private String prefix = "elastic.job.";
+    private final String prefix = "elastic.job.";
     private Environment environment;
     @Autowired(required = false)
     private JobService jobService;
@@ -49,14 +48,11 @@ public class JobConfigParser implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext ctx) throws BeansException {
         this.environment = ctx.getEnvironment();
         Map<String, Object> beanMap = ctx.getBeansWithAnnotation(ElasticJobConfig.class);
-        Iterator iterator = beanMap.values().iterator();
-
-        while (iterator.hasNext()) {
-            Object confBean = iterator.next();
+        for (Object confBean : beanMap.values()) {
             Class<?> clz = confBean.getClass();
             this.getJobTypeClass(clz);
             String jobTypeName = this.jobTypeClass.getSimpleName();
-            ElasticJobConfig conf = (ElasticJobConfig) clz.getAnnotation(ElasticJobConfig.class);
+            ElasticJobConfig conf = clz.getAnnotation(ElasticJobConfig.class);
             String jobClass = clz.getName();
             String jobName = conf.name();
             Job job = this.initJob(jobName, jobClass, conf);
@@ -66,7 +62,7 @@ public class JobConfigParser implements ApplicationContextAware {
             BeanDefinitionBuilder factory = BeanDefinitionBuilder.rootBeanDefinition(SpringJobScheduler.class);
             factory.setScope("prototype");
             if (Objects.equals("ScriptJob", jobTypeName)) {
-                factory.addConstructorArgValue((Object) null);
+                factory.addConstructorArgValue(null);
             } else {
                 factory.addConstructorArgValue(confBean);
             }
@@ -81,8 +77,8 @@ public class JobConfigParser implements ApplicationContextAware {
 
             factory.addConstructorArgValue(elasticJobListeners);
             DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) ctx.getAutowireCapableBeanFactory();
-            defaultListableBeanFactory.registerBeanDefinition("SpringJobScheduler", factory.getBeanDefinition());
-            SpringJobScheduler springJobScheduler = (SpringJobScheduler) ctx.getBean("SpringJobScheduler");
+            defaultListableBeanFactory.registerBeanDefinition(clz.getSimpleName(), factory.getBeanDefinition());
+            SpringJobScheduler springJobScheduler = (SpringJobScheduler) ctx.getBean(clz.getSimpleName());
             springJobScheduler.init();
             log.info("【" + jobName + "】\t" + jobClass + "\tinit success");
         }
@@ -107,12 +103,11 @@ public class JobConfigParser implements ApplicationContextAware {
             typeConfig = new ScriptJobConfiguration(coreConfig, job.getScriptCommandLine());
         }
 
-        LiteJobConfiguration jobConfig = LiteJobConfiguration.newBuilder((JobTypeConfiguration)typeConfig).overwrite(job.isOverwrite()).disabled(job.isDisabled()).monitorPort(job.getMonitorPort()).monitorExecution(job.isMonitorExecution()).maxTimeDiffSeconds(job.getMaxTimeDiffSeconds()).jobShardingStrategyClass(job.getJobShardingStrategyClass()).reconcileIntervalMinutes(job.getReconcileIntervalMinutes()).build();
-        return jobConfig;
+        return LiteJobConfiguration.newBuilder(typeConfig).overwrite(job.isOverwrite()).disabled(job.isDisabled()).monitorPort(job.getMonitorPort()).monitorExecution(job.isMonitorExecution()).maxTimeDiffSeconds(job.getMaxTimeDiffSeconds()).jobShardingStrategyClass(job.getJobShardingStrategyClass()).reconcileIntervalMinutes(job.getReconcileIntervalMinutes()).build();
     }
 
     private List<BeanDefinition> getElasticJobListeners(ElasticJobConfig conf) {
-        List<BeanDefinition> result = new ManagedList(2);
+        List<BeanDefinition> result = new ManagedList<>(2);
         String listeners = this.getEnvironmentStringValue(conf.name(), "listener", conf.listener());
         if (StringUtils.hasText(listeners)) {
             BeanDefinitionBuilder factory = BeanDefinitionBuilder.rootBeanDefinition(listeners);
@@ -131,16 +126,14 @@ public class JobConfigParser implements ApplicationContextAware {
     }
 
 
-
     private void getJobTypeClass(Class<?> clz) {
         if (Objects.isNull(clz)) {
             throw new RuntimeException("can not find job xyz.sunziyue.elastic.job.annotation ,job init fail");
         } else {
             Class<?>[] classes = clz.getInterfaces();
             boolean isJob = false;
-            if (Objects.nonNull(classes) && classes.length > 0) {
-                for (int i = 0; i < classes.length; ++i) {
-                    Class<?> c = classes[i];
+            if (classes.length > 0) {
+                for (Class<?> c : classes) {
                     String name = c.getSimpleName();
                     if (Objects.equals(name, "SimpleJob") || Objects.equals(name, "DataflowJob") || Objects.equals(name, "ScriptJob")) {
                         isJob = true;
@@ -166,19 +159,19 @@ public class JobConfigParser implements ApplicationContextAware {
     private int getEnvironmentIntValue(String jobName, String fieldName, int defaultValue) {
         String key = this.prefix + jobName + "." + fieldName;
         String value = this.environment.getProperty(key);
-        return StringUtils.hasText(value) ? Integer.valueOf(value) : defaultValue;
+        return StringUtils.hasText(value) ? Objects.nonNull(value) ? Integer.parseInt(value) : defaultValue : defaultValue;
     }
 
     private long getEnvironmentLongValue(String jobName, String fieldName, long defaultValue) {
         String key = this.prefix + jobName + "." + fieldName;
         String value = this.environment.getProperty(key);
-        return StringUtils.hasText(value) ? Long.valueOf(value) : defaultValue;
+        return StringUtils.hasText(value) ? Objects.nonNull(value) ? Long.parseLong(value) : defaultValue : defaultValue;
     }
 
     private boolean getEnvironmentBooleanValue(String jobName, String fieldName, boolean defaultValue) {
         String key = this.prefix + jobName + "." + fieldName;
         String value = this.environment.getProperty(key);
-        return StringUtils.hasText(value) ? Boolean.valueOf(value) : defaultValue;
+        return StringUtils.hasText(value) ? Objects.nonNull(value) ? Boolean.parseBoolean(value) : defaultValue : defaultValue;
     }
 
     private Job initJob(String jobName, String jobClass, ElasticJobConfig conf) {
@@ -209,9 +202,9 @@ public class JobConfigParser implements ApplicationContextAware {
                 .jobParameter(jobParameter)
                 .jobProperties(
                         JobProperties.builder()
-                        .jobExceptionHandler(jobExceptionHandler)
-                        .executorServiceHandler(executorServiceHandler)
-                        .build()
+                                .jobExceptionHandler(jobExceptionHandler)
+                                .executorServiceHandler(executorServiceHandler)
+                                .build()
                 )
                 .jobShardingStrategyClass(jobShardingStrategyClass)
                 .failover(failover)

@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 
 public class BeanMapper {
-    private static DozerBeanMapper dozer = new DozerBeanMapper();
+    private final static DozerBeanMapper dozer = new DozerBeanMapper();
 
     private BeanMapper() {
     }
@@ -21,16 +21,12 @@ public class BeanMapper {
         return dozer.map(source, destinationClass);
     }
 
-    public static <T> List<T> mapList(Collection sourceList, Class<T> destinationClass) {
+    public static <T> List<T> mapList(Collection<?> sourceList, Class<T> destinationClass) {
         List<T> destinationList = Lists.newArrayList();
-        Iterator iterator = sourceList.iterator();
-
-        while (iterator.hasNext()) {
-            Object sourceObject = iterator.next();
+        for (Object sourceObject : sourceList) {
             T destinationObject = dozer.map(sourceObject, destinationClass);
             destinationList.add(destinationObject);
         }
-
         return destinationList;
     }
 
@@ -39,16 +35,14 @@ public class BeanMapper {
     }
 
     public static Map<String, Object> convertObjectToMap(Object obj) throws IntrospectionException, InvocationTargetException, IllegalAccessException {
-        Map<String, Object> objectAsMap = new HashMap();
+        Map<String, Object> objectAsMap = new HashMap<>();
         BeanInfo info = Introspector.getBeanInfo(obj.getClass());
         PropertyDescriptor[] propertyDescriptors = info.getPropertyDescriptors();
-        for (int i = 0; i < propertyDescriptors.length; ++i) {
-            PropertyDescriptor pd = propertyDescriptors[i];
+        for (PropertyDescriptor pd : propertyDescriptors) {
             Method reader = pd.getReadMethod();
             if (reader != null && !reader.isAccessible()) {
                 reader.setAccessible(Boolean.TRUE);
             }
-
             objectAsMap.put(pd.getName(), reader.invoke(obj));
         }
 
