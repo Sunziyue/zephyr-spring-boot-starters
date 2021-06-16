@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-xyz.sunziyue.boot.rocket.mq.autoconfigure.RocketMQAutoConfiguration
+xyz.szy.boot.rocket.mq.autoconfigure.RocketMQAutoConfiguration

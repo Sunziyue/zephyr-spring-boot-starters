@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.sunziyue.api.api.UserService;
 import xyz.sunziyue.api.modle.po.User;
-import xyz.sunziyue.common.model.Response;
+import Response;
 
 /**
  * @author Sunziyue
@@ -52,7 +52,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
-import xyz.sunziyue.common.model.Criteria;
+import Criteria;
 
 import java.io.Serializable;
 

@@ -44,6 +44,7 @@ elastic:
 ```
 ---
 ### java code
+
 ```java
 package xyz.sunziyue.service.schedule;
 
@@ -51,7 +52,7 @@ import com.dangdang.ddframe.job.api.ShardingContext;
 import com.dangdang.ddframe.job.api.simple.SimpleJob;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import xyz.sunziyue.elastic.job.annotation.ElasticJobConfig;
+import ElasticJobConfig;
 
 /**
  * @author Sunziyue

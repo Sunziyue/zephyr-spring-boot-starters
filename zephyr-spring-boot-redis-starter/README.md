@@ -15,6 +15,7 @@ redis:
 ```
 ---
 ### java code
+
 ```java
 package xyz.sunziyue.service.dao;
 
@@ -22,8 +23,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import xyz.sunziyue.api.modle.po.User;
-import xyz.sunziyue.common.redis.dao.RedisBaseDao;
-import xyz.sunziyue.common.redis.utils.JedisTemplate;
+import RedisBaseDao;
+import JedisTemplate;
 
 @Slf4j
 @Repository

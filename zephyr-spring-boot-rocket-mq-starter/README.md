@@ -7,6 +7,7 @@ rocketmq:
 ```
 ---
 ### Producer java code
+
 ```java
 package com.example.demo;
 
@@ -15,8 +16,8 @@ import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import xyz.sunziyue.boot.rocket.mq.core.Consumer;
-import xyz.sunziyue.boot.rocket.mq.core.Producer;
+import Consumer;
+import Producer;
 
 @Slf4j
 @Component
@@ -48,22 +49,23 @@ public class MqManager {
 ```
 ---
 ### Consumer java code
+
 ```java
 package com.example.demo;
 
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import xyz.sunziyue.boot.rocket.mq.annotation.ConsumeMode;
-import xyz.sunziyue.boot.rocket.mq.annotation.MQConsumer;
-import xyz.sunziyue.boot.rocket.mq.annotation.MQSubscribe;
+import ConsumeMode;
+import MQConsumer;
+import MQSubscribe;
 
 @Slf4j
 @Component
 @MQConsumer
 public class Consumer {
     @MQSubscribe(topic = "test", consumeMode = ConsumeMode.CONCURRENTLY)
-    public void test(Man man){
+    public void test(Man man) {
         log.info("msg: {}", JSON.toJSONString(man));
     }
 }

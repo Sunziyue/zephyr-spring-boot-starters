@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-xyz.sunziyue.boot.swagger.autoconfig.SwaggerAutoConfiguration
+xyz.szy.boot.swagger.autoconfig.SwaggerAutoConfiguration
