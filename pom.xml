@@ -191,10 +191,6 @@
                 <version>${swagger.annotation.version}</version>
             </dependency>
             <!-- zephy-springr-boot-swagger-starter END -->
-
-            <!-- zephy-springr-boot-rocket-mq-starter START -->
-            <!-- zephy-springr-boot-rocket-mq-starter END -->
-
         </dependencies>
     </dependencyManagement>
 
